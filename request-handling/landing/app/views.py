@@ -1,32 +1,37 @@
 from collections import Counter
 
 from django.shortcuts import render
-
-# Для отладки механизма ab-тестирования используйте эти счетчики
-# в качестве хранилища количества показов и количества переходов.
-# но помните, что в реальных проектах так не стоит делать
-# так как при перезапуске приложения они обнулятся
 counter_show = Counter()
 counter_click = Counter()
 
 
 def index(request):
-    # Реализуйте логику подсчета количества переходов с лендига по GET параметру from-landing
+    param = request.GET.get('from-landing')
+    counter_click[param] += 1
     return render(request, 'index.html')
 
 
 def landing(request):
-    # Реализуйте дополнительное отображение по шаблону app/landing_alternate.html
-    # в зависимости от GET параметра ab-test-arg
-    # который может принимать значения original и test
-    # Так же реализуйте логику подсчета количества показов
-    return render(request, 'landing.html')
+    param = request.GET.get('ab-test-arg', 'original')
+    if param == 'test':
+        template = 'landing_alternate.html'
+    else:
+        template = 'landing.html'
+    counter_show[param] += 1
+    return render(request, template)
 
 
 def stats(request):
-    # Реализуйте логику подсчета отношения количества переходов к количеству показов страницы
-    # Для вывода результат передайте в следующем формате:
+    try:
+        test_conversion = counter_click['test']/counter_show['test']
+    except ZeroDivisionError:
+        test_conversion = 'Нет данных'
+    try:
+        original_conversion = counter_click['original']/counter_show['original']
+    except ZeroDivisionError:
+        original_conversion = 'Нет данных'
+
     return render(request, 'stats.html', context={
-        'test_conversion': 0.5,
-        'original_conversion': 0.4,
+        'test_conversion': test_conversion,
+        'original_conversion': original_conversion,
     })
