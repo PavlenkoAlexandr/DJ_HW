@@ -13,7 +13,7 @@ def file_list(request, date=None):
             'name': file,
             'ctime': datetime.fromtimestamp(os.stat(os.path.join(settings.FILES_PATH, file)).st_ctime),
             'mtime': datetime.fromtimestamp(os.stat(os.path.join(settings.FILES_PATH, file)).st_mtime)
-        } for file in files]
+        } for file in files if datetime.fromtimestamp(os.stat(os.path.join(settings.FILES_PATH, file)).st_ctime) == date]
 
     context = {
         'files': files,
