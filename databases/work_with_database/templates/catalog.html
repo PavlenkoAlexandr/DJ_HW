@@ -9,11 +9,21 @@
         </div>
 
         <div class="sort-block">
-            {# Здесь должен быть раздел с сортировкой #}
+            Сортировать по:
+            {% for key, value in sort_method.items %}
+            <span style="padding: 5px"><a href="/catalog?sort={{ value }}">{{ key }}</a></span>
+            {% endfor %}
         </div>
 
         <div class="content">
-            {# Здесь должен отображаться каталог с телефонами #}
+            <div class="card-deck">
+            {% for phone in phones%}
+                <div class="card-body">
+                <h2><a href="/catalog/{{ phone.slug }}">{{ phone.name }}</a></h2>
+                <h5>Стоимость {{ phone.price }}р.</h5>
+                <img src="{{ phone.image }}">
+                </div>
+            {% endfor %}
+                </div>
         </div>
-    </div>
 {% endblock %}

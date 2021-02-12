@@ -5,10 +5,24 @@
 {% block content %}
     <div class="container">
         <div class="header">
-            <h1>Телефон</h1>
+            <h1>{{ phone.name }}</h1>
         </div>
         <div class="content">
+            <div class="card-deck">
+                <div class="card-body">
+                    <img src="{{ phone.image }}">
+                </div>
+                <div class="card-body">
+                    <h6>Дата выхода: {{ phone.release_date }}</h6>
+                    {% if phone.lte_exists %}
+                    <h6>LTE : Есть</h6>
+                    {% else %}
+                    <h6>LTE: Нет</h6>
+                    {% endif %}
+                    <h5>Цена: {{ phone.price }}р.</h5>
 
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
