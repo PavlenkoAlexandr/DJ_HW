@@ -1,13 +1,18 @@
 from django.contrib import admin
-
 from .models import Student, Teacher
 
 
-@admin.register(Student)
+class StudentTeacherInline(admin.TabularInline):
+    model = Student.teachers.through
+
+
 class StudentAdmin(admin.ModelAdmin):
-    pass
+    inlines = (StudentTeacherInline,)
 
 
-@admin.register(Teacher)
 class TeacherAdmin(admin.ModelAdmin):
-    pass
+    inlines = (StudentTeacherInline,)
+
+
+admin.site.register(Student, StudentAdmin)
+admin.site.register(Teacher, TeacherAdmin)
